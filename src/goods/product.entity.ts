@@ -12,6 +12,9 @@ export class Product {
   @Column()
   description: string;
 
+  @Column()
+  image: string;
+
   @OneToMany(() => Month, (month) => month.product)
   months: Month[];
 }

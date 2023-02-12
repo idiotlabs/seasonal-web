@@ -1,22 +1,23 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { TypeOrmConfigService } from './config/database.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { GoodsModule } from './goods/goods.module';
-import { DataSource } from 'typeorm';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'idiotlabs.cp2wvuonihfg.ap-northeast-2.rds.amazonaws.com',
-      port: 3306,
-      username: 'idiotlabs',
-      password: 'idiotlabs4444',
-      database: 'idiotlabs',
-      entities: [__dirname + '/**/**/*.entity.{ts,js}'],
-      synchronize: false,
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: TypeOrmConfigService,
+    }),
+    AuthModule,
     GoodsModule,
   ],
   providers: [AppService],

@@ -1,37 +1,28 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Product } from './product.entity';
+import { GoodsService } from './goods.service';
 
+// @ApiSecurity('basic')
 @Controller('goods')
 export class GoodsController {
-  constructor(
-    @InjectRepository(Product) private productRepository: Repository<Product>,
-  ) {}
+  constructor(private goodsService: GoodsService) {}
 
+  @UseGuards(AuthGuard('bearer'))
   @Get()
-  findAll() {
-    return this.productRepository.find({
-      relations: {
-        months: true,
-      },
-      select: { id: true, name: true, months: { month: true, division: true } },
-    });
+  async findAll(): Promise<Product[]> {
+    return this.goodsService.findAll();
   }
 
+  @UseGuards(AuthGuard('bearer'))
   @Get(':id')
-  findOne(@Param() params) {
-    const id = params.id;
-    return this.productRepository.find({
-      relations: {
-        months: true,
-      },
-      select: {
-        name: true,
-        description: true,
-        months: { month: true, division: true },
-      },
-      where: { id: id },
-    });
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Product[]> {
+    return this.goodsService.findOne(id);
   }
 }
