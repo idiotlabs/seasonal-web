@@ -22,7 +22,7 @@ export class GoodsController {
 
   @UseGuards(AuthGuard('bearer'))
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Product[]> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Product> {
     return this.goodsService.findOne(id);
   }
 }

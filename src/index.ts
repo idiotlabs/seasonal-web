@@ -2,13 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import serverlessExpress from '@vendia/serverless-express';
 import { Callback, Context, Handler } from 'aws-lambda';
 import { AppModule } from './app.module';
-// import helmet from 'helmet';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 let server: Handler;
 
 async function bootstrap(): Promise<Handler> {
-  const app = await NestFactory.create(AppModule);
-  // app.use(helmet());
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.useStaticAssets(join(__dirname, 'public'));
+  app.setBaseViewsDir(join(__dirname, 'views'));
+  app.setViewEngine('hbs');
+
   await app.init();
 
   const expressApp = app.getHttpAdapter().getInstance();
