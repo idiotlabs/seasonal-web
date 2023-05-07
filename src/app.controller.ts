@@ -10,6 +10,11 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @Get('version')
+  version() {
+    return this.appService.getVersion();
+  }
+
   @Get('privacy')
   @Render('privacy')
   root() {

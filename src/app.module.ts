@@ -7,6 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GoodsModule } from './goods/goods.module';
 import { AuthModule } from './auth/auth.module';
+import { State } from './entity/state.entity';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
       imports: [ConfigModule],
       useClass: TypeOrmConfigService,
     }),
+    TypeOrmModule.forFeature([State]),
     AuthModule,
     GoodsModule,
   ],
